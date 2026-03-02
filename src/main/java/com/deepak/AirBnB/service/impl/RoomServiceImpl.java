@@ -5,6 +5,7 @@ import com.deepak.AirBnB.entity.Hotel;
 import com.deepak.AirBnB.entity.Room;
 import com.deepak.AirBnB.repository.HotelRepository;
 import com.deepak.AirBnB.repository.RoomRepository;
+import com.deepak.AirBnB.service.InventoryService;
 import com.deepak.AirBnB.service.RoomService;
 import jakarta.persistence.ManyToOne;
 import jakarta.transaction.Transactional;
@@ -25,6 +26,7 @@ public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final ModelMapper modelMapper;
     private final HotelRepository hotelRepository;
+    private final InventoryService inventoryService;
 
     @Override
     public RoomDto createNewRoom(Long hotelId, RoomDto roomDto) {
@@ -34,6 +36,9 @@ public class RoomServiceImpl implements RoomService {
         Room room = modelMapper.map(roomDto, Room.class);
         room.setHotel(hotel);
         room = roomRepository.save(room);
+        if(hotel.getActive()){
+            inventoryService.initializeRoomForAYear(room);
+        }
         return modelMapper.map(room, RoomDto.class);
     }
 

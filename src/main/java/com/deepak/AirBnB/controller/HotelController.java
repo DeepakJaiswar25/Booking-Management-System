@@ -38,7 +38,7 @@ public class HotelController {
 
     @PatchMapping("/{hotelId}")
     public ResponseEntity<HotelDto> activateHotel(@PathVariable Long hotelId) {
-        return ResponseEntity.ok().body(hotelService.activateHotel(hotelId));
+        return ResponseEntity.noContent().build();
     }
 
 
