@@ -93,7 +93,7 @@ public class BookingServiceImpl implements BookingService {
 
     public User getCurrentUser() {
         User user = new User();
-        user.setId(1L); // TODO: REMOVE DUMMY USER
+        user.setId(1L);
         return user;
     }
 }
