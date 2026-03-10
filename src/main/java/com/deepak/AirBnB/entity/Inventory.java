@@ -35,8 +35,11 @@ public class Inventory {
     @Column(nullable = false)
     private LocalDate date;
 
-    @Column(columnDefinition = "INTEGER DEFAULT )",nullable = false)
+    @Column(columnDefinition = "INTEGER DEFAULT 0",nullable = false)
     private Integer bookedCount;
+
+    @Column(columnDefinition = "INTEGER DEFAULT 0",nullable = false)
+    private Integer reservedCount;
 
     @Column(nullable = false)
     private Integer totalCount;

@@ -1,6 +1,7 @@
 package com.deepak.AirBnB.service;
 
 import com.deepak.AirBnB.dto.HotelDto;
+import com.deepak.AirBnB.dto.HotelInfoDto;
 
 public interface HotelService {
 
@@ -15,4 +16,5 @@ public interface HotelService {
 
     void activateHotel(Long id);
 
+    HotelInfoDto getHotelInfoById(Long hotelId);
 }
