@@ -1,4 +1,4 @@
-package com.deepak.AirBnB.startegy;
+package com.deepak.AirBnB.strategy;
 
 import com.deepak.AirBnB.entity.Inventory;
 

@@ -6,7 +6,7 @@ import com.deepak.AirBnB.entity.Inventory;
 import com.deepak.AirBnB.repository.HotelMinPriceRepository;
 import com.deepak.AirBnB.repository.HotelRepository;
 import com.deepak.AirBnB.repository.InventoryRepository;
-import com.deepak.AirBnB.startegy.PricingService;
+import com.deepak.AirBnB.strategy.PricingService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

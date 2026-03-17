@@ -1,4 +1,4 @@
-package com.deepak.AirBnB.startegy;
+package com.deepak.AirBnB.strategy;
 
 import com.deepak.AirBnB.entity.Inventory;
 import lombok.RequiredArgsConstructor;
@@ -6,14 +6,16 @@ import lombok.RequiredArgsConstructor;
 import java.math.BigDecimal;
 
 @RequiredArgsConstructor
-public class SurgePricingStrategy implements PricingStrategy {
+public class HolidayPricingStrategy implements PricingStrategy {
 
     private final PricingStrategy wrapped;
     @Override
     public BigDecimal calculatePrice(Inventory inventory) {
-
         BigDecimal price = wrapped.calculatePrice(inventory);
-
-        return price.multiply(inventory.getSurgeFactor());
+        boolean isHolidayToday= true;
+        if(isHolidayToday){
+            price =price.multiply(BigDecimal.valueOf(1.25));
+        }
+        return price;
     }
 }

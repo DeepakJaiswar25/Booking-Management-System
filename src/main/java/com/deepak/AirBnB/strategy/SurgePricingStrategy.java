@@ -1,4 +1,4 @@
-package com.deepak.AirBnB.startegy;
+package com.deepak.AirBnB.strategy;
 
 import com.deepak.AirBnB.entity.Inventory;
 import lombok.RequiredArgsConstructor;
@@ -6,17 +6,14 @@ import lombok.RequiredArgsConstructor;
 import java.math.BigDecimal;
 
 @RequiredArgsConstructor
-public class OccupancyPricingStrategy implements PricingStrategy {
+public class SurgePricingStrategy implements PricingStrategy {
 
     private final PricingStrategy wrapped;
-
     @Override
     public BigDecimal calculatePrice(Inventory inventory) {
+
         BigDecimal price = wrapped.calculatePrice(inventory);
-        double occupancy= (double) inventory.getBookedCount()/inventory.getTotalCount();
-        if(occupancy>0.8){
-            price=price.multiply(BigDecimal.valueOf(1.2));
-        }
-        return price;
+
+        return price.multiply(inventory.getSurgeFactor());
     }
 }
