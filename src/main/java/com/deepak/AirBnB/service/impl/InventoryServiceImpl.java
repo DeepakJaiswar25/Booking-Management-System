@@ -1,10 +1,12 @@
 package com.deepak.AirBnB.service.impl;
 
 import com.deepak.AirBnB.dto.HotelDto;
+import com.deepak.AirBnB.dto.HotelPriceDto;
 import com.deepak.AirBnB.dto.HotelSearchRequest;
 import com.deepak.AirBnB.entity.Hotel;
 import com.deepak.AirBnB.entity.Inventory;
 import com.deepak.AirBnB.entity.Room;
+import com.deepak.AirBnB.repository.HotelMinPriceRepository;
 import com.deepak.AirBnB.repository.HotelRepository;
 import com.deepak.AirBnB.repository.InventoryRepository;
 import com.deepak.AirBnB.repository.RoomRepository;
@@ -30,6 +32,7 @@ import java.time.temporal.ChronoUnit;
 public class InventoryServiceImpl implements InventoryService {
 
     private final InventoryRepository inventoryRepository;
+    private final HotelMinPriceRepository hotelMinPriceRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -64,15 +67,16 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public Page<HotelDto> searchHotels(HotelSearchRequest hotelSearchRequest) {
+    public Page<HotelPriceDto> searchHotels(HotelSearchRequest hotelSearchRequest) {
      log.info("Searching hotels for {} city, from {} to {}",
              hotelSearchRequest.getCity(),hotelSearchRequest.getStartDate(), hotelSearchRequest.getEndDate());
         Pageable pageable = PageRequest.of(hotelSearchRequest.getPage(), hotelSearchRequest.getSize());
         long dateCount= ChronoUnit.DAYS.between(hotelSearchRequest.getStartDate(), hotelSearchRequest.getEndDate())+1;
-        Page<Hotel> page= inventoryRepository.findHotelsWithAvailableInventory(hotelSearchRequest.getCity(),
+
+        Page<HotelPriceDto> page= hotelMinPriceRepository.findHotelsWithAvailableInventory(hotelSearchRequest.getCity(),
                 hotelSearchRequest.getStartDate(),hotelSearchRequest.getEndDate(),hotelSearchRequest.getRoomCount(),dateCount,pageable);
 
-        return page.map(hotel -> modelMapper.map(hotel, HotelDto.class));
+        return page;
     }
 
 
