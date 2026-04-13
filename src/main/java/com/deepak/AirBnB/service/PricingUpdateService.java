@@ -36,7 +36,7 @@ private final HotelMinPriceRepository hotelMinPriceRepository;
 
 
 
-    @Scheduled(cron="*/5 * * * * *")
+//    @Scheduled(cron="*/5 * * * * *")
    public void updatePrices() {
 
        int page=0;
