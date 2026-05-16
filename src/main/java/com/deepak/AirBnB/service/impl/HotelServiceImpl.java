@@ -1,11 +1,14 @@
 package com.deepak.AirBnB.service.impl;
+import com.deepak.AirBnB.dto.BookingDto;
 import com.deepak.AirBnB.dto.HotelDto;
 import com.deepak.AirBnB.dto.HotelInfoDto;
 import com.deepak.AirBnB.dto.RoomDto;
+import com.deepak.AirBnB.entity.Booking;
 import com.deepak.AirBnB.entity.Hotel;
 import com.deepak.AirBnB.entity.Room;
 import com.deepak.AirBnB.entity.User;
 import com.deepak.AirBnB.exception.UnAuthorisedException;
+import com.deepak.AirBnB.repository.BookingRepository;
 import com.deepak.AirBnB.repository.HotelRepository;
 import com.deepak.AirBnB.repository.RoomRepository;
 import com.deepak.AirBnB.service.HotelService;
@@ -20,6 +23,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.deepak.AirBnB.utils.AppUtils.getCurrentUser;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -30,6 +35,7 @@ public class HotelServiceImpl implements HotelService {
     private final ModelMapper modelMapper;
     private final InventoryService inventoryService;
     private final RoomRepository roomRepository;
+    private final BookingRepository bookingRepository;
 
     @Override
     public HotelDto createNewHotel(HotelDto hotelDto) {
@@ -115,4 +121,15 @@ public class HotelServiceImpl implements HotelService {
                 .map(room -> modelMapper.map(room, RoomDto.class)).toList();
         return new HotelInfoDto(modelMapper.map(hotel,HotelDto.class),rooms);
     }
+
+    @Override
+    public List<HotelDto> getAllHotels() {
+        User user = getCurrentUser();
+        log.info("getting All Hotels for user with id {}", user.getId());
+        List<Hotel> hotels = hotelRepository.findByOwner(user);
+        return hotels.stream()
+                .map(hotel -> modelMapper.map(hotel, HotelDto.class))
+                .collect(Collectors.toList());
+    }
+
 }

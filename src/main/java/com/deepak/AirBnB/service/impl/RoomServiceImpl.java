@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.deepak.AirBnB.utils.AppUtils.getCurrentUser;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -36,7 +38,7 @@ public class RoomServiceImpl implements RoomService {
         log.info("Creating room with hotelId {}", hotelId);
         Hotel hotel = hotelRepository.findById(hotelId)
                 .orElseThrow(() -> new RuntimeException("No Hotel Found with this Id " + hotelId));
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user =  getCurrentUser();;
         if(!user.equals(hotel.getOwner())) {
             throw new UnAuthorisedException("This user does not own this hotel with id: "+hotelId);
         }
@@ -54,7 +56,7 @@ public class RoomServiceImpl implements RoomService {
         log.info("Getting all rooms in hotel {}", hotelId);
         Hotel hotel = hotelRepository.findById(hotelId)
                 .orElseThrow(() -> new RuntimeException("No Hotel Found with this Id " + hotelId));
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user =  getCurrentUser();;
         if(!user.equals(hotel.getOwner())) {
             throw new UnAuthorisedException("This user does not own this hotel with id: "+hotelId);
         }
@@ -77,10 +79,32 @@ public class RoomServiceImpl implements RoomService {
         log.info("Deleting room with roomId {}", roomId);
         Room room= roomRepository.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("No Room Found with this Id " + roomId));
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user =  getCurrentUser();;
         if(!user.equals(room.getHotel().getOwner())) {
             throw new UnAuthorisedException("This user does not own this room with id: "+roomId);
         }
         roomRepository.deleteById(roomId);
+    }
+
+    @Override
+    public RoomDto updateRoomById(Long hotelId, Long roomId, RoomDto roomDto) {
+        log.info("Updating room with roomId {}", roomId);
+        Hotel hotel = hotelRepository.findById(hotelId)
+                .orElseThrow(() -> new RuntimeException("No Hotel Found with this Id " + hotelId));
+        User user =  getCurrentUser();;
+        if(!user.equals(hotel.getOwner())) {
+            throw new UnAuthorisedException("This user does not own this hotel with id: "+hotelId);
+        }
+        Room room= roomRepository.findById(roomId)
+                .orElseThrow(() -> new RuntimeException("No Room Found with this Id " + roomId));
+       
+        // Check if base price has been updated
+        if(roomDto.getBasePrice() != null && !roomDto.getBasePrice().equals(room.getBasePrice())) {
+            inventoryService.updateBasePriceForFutureInventories(room, roomDto.getBasePrice());
+        }
+        modelMapper.map(roomDto, room);
+        room.setId(roomId);
+        roomRepository.save(room);
+        return modelMapper.map(room, RoomDto.class);
     }
 }
