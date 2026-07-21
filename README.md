@@ -1,4 +1,4 @@
-# Booking Platform
+# Booking Management System
 
 [![Java](https://img.shields.io/badge/Java-21-blue.svg)](https://www.java.com/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.3-brightgreen.svg)](https://spring.io/projects/spring-boot)
